@@ -7,7 +7,7 @@ __pycache__/
 .pytest_cache/
 *.egg-info/
 # data + secrets
-data/
+/data/
 *.parquet
 *.duckdb
 *.duckdb.wal

@@ -1,0 +1,38 @@
+# Capacity-constraint intensity, coded from public earnings-call commentary and
+# contemporaneous press reporting. CALENDAR quarter = the quarter the demand/supply
+# state applied to (roughly the quarter reported on that cycle's call).
+#
+# Coding (0-3) per provider:
+#   0 = no constraint language; elasticity normal (or demand-side softness / "optimization")
+#   1 = isolated / product-specific tightness mentioned
+#   2 = explicit "capacity constrained", "demand exceeds capacity" as a material factor
+#   3 = severe: "short on power and space", multi-quarter guide-down attributed to capacity
+#
+# This proxy is PARTLY CIRCULAR (derived from the same earnings events it predicts) and
+# subjective. It is a smell test, not the definitive signal — the definitive test uses
+# the self-measured spot-price premium (Zenodo archive). See LABELS.md.
+cq,aws_cc,azure_cc,gcp_cc,notes
+2019Q4,0,0,0,"pre-COVID baseline; abundant elasticity"
+2020Q1,1,2,0,"COVID surge; MSFT throttled free trials, prioritized existing customers"
+2020Q2,1,1,0,"MSFT capacity pressure easing; AWS absorbed demand"
+2020Q3,0,0,0,"normalized"
+2020Q4,0,0,0,"normalized"
+2021Q1,0,0,0,"strong demand, supply keeping up"
+2021Q2,0,0,0,""
+2021Q3,1,1,0,"broad semiconductor shortage; some server lead-time pressure, not customer-facing"
+2021Q4,1,1,0,"chip shortage continues"
+2022Q1,1,1,0,"chip shortage; AWS/Azure still delivering"
+2022Q2,0,0,0,"easing"
+2022Q3,0,0,0,"demand-side softening begins (macro)"
+2022Q4,0,0,0,"'cost optimization' era begins; growth decelerating on DEMAND weakness"
+2023Q1,0,0,0,"optimization headwind peak; AWS +16%, no capacity issue"
+2023Q2,0,1,0,"generative-AI wave; first AI-specific capacity mentions (Azure)"
+2023Q3,0,2,1,"Azure AI demand exceeding capacity; GCP tightening"
+2023Q4,0,2,1,"Azure AI capacity constrained; MSFT building aggressively"
+2024Q1,0,2,1,"Azure capacity constrained (AI); GCP tight"
+2024Q2,0,2,1,"Azure constrained; AWS still elastic"
+2024Q3,1,2,2,"GCP 'tight supply-demand'; Azure constrained; AWS first hints on power/chips"
+2024Q4,1,3,2,"MSFT 'short power and space' (Hood); GCP demand>capacity; AWS power-constrained"
+2025Q1,2,3,2,"AWS explicitly capacity-constrained (Jassy: could grow faster); Azure severe; GCP tight"
+2025Q2,2,3,2,"all three constrained; AWS chips/power; Azure guide 'could be higher'"
+2025Q3,2,3,2,"constraints persist; MSFT guides constrained through at least mid-2026"

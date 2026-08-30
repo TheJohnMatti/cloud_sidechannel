@@ -1,0 +1,44 @@
+# Hyperscaler cloud-segment quarterly panel. CALENDAR quarters.
+# Sources: company press releases / 10-Q / 10-K. Figures compiled from public
+# reporting and rounded; APPROXIMATE (+/- ~2%) — flagged for a verification pass
+# against primary filings before any decision rests on exact levels. Growth-rate
+# patterns (the thing this feasibility test uses) are robust to that noise.
+#
+# aws_rev_musd    : AWS net sales, $M
+# aws_yoy         : AWS YoY growth, % (reported, USD)
+# azure_yoy       : "Azure and other cloud services" revenue growth, % (as-reported USD; MSFT gives no $)
+# gcp_rev_musd    : Google Cloud revenue, $M (post-2020 restatement basis)
+# gcp_yoy         : Google Cloud YoY growth, %
+# capex_3_musd    : sum of AMZN + MSFT + GOOG capex (purchases of P&E), $M, calendar quarter (approx)
+cq,aws_rev_musd,aws_yoy,azure_yoy,gcp_rev_musd,gcp_yoy,capex_3_musd
+2018Q1,5442,49,93,,,11900
+2018Q2,6105,49,89,,,12100
+2018Q3,6679,46,76,,,13400
+2018Q4,7430,45,76,,,13600
+2019Q1,7696,41,73,1830,,13100
+2019Q2,8381,37,68,2097,,13900
+2019Q3,8995,35,63,2381,,14600
+2019Q4,9954,34,62,2614,,16800
+2020Q1,10219,33,59,2777,52,17800
+2020Q2,10808,29,47,3007,43,17600
+2020Q3,11601,29,48,3444,45,20900
+2020Q4,12742,28,50,3831,47,24800
+2021Q1,13503,32,50,4047,46,25900
+2021Q2,14809,37,51,4628,54,27600
+2021Q3,16110,39,50,4990,45,30200
+2021Q4,17780,40,46,5541,45,33900
+2022Q1,18441,37,46,5821,44,34600
+2022Q2,19739,33,40,6276,36,37900
+2022Q3,20538,27,35,6868,38,40800
+2022Q4,21378,20,38,7315,32,39900
+2023Q1,21354,16,31,7454,28,33200
+2023Q2,22140,12,26,8031,28,32600
+2023Q3,23059,12,28,8411,22,32900
+2023Q4,24204,13,30,9192,26,40700
+2024Q1,25037,17,31,9574,28,44200
+2024Q2,26281,19,30,10347,29,50900
+2024Q3,27452,19,33,11353,35,58300
+2024Q4,28786,19,31,11955,30,68500
+2025Q1,29267,17,33,12260,28,72400
+2025Q2,30873,17.5,39,13623,32,80600
+2025Q3,33005,20,40,15157,34,95000

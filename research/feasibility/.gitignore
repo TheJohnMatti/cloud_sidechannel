@@ -1,3 +1,10 @@
+# bulk / fetched data — keep the small compiled CSVs, ignore everything heavy
 .venv/
-data/px_*.csv
 __pycache__/
+data/spot/
+data/raw/
+data/px_*.csv
+*.parquet
+*.tar
+*.tar.xz
+*.tpxz
