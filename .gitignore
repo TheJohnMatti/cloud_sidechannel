@@ -1,0 +1,19 @@
+.venv/
+__pycache__/
+*.pyc
+*.py~
+*.un~
+.DS_Store
+.pytest_cache/
+*.egg-info/
+# data + secrets
+data/
+*.parquet
+*.duckdb
+*.duckdb.wal
+.env
+secrets.json
+aws-credentials*
+# cost governor state
+runs/
+budget_state.json
