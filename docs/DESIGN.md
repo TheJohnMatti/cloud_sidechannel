@@ -7,6 +7,13 @@ Status: **Phase 0 (design)**. This doc is the decision record. John drives decis
 open questions are collected in [Decisions](#decisions--open-questions) and in
 `docs/DECISIONS.md`.
 
+**Companion docs:**
+- [TECHNIQUES.md](TECHNIQUES.md) — the sensing layer: exactly what we measure, which
+  API, what it costs, why it carries signal.
+- [LABELS.md](LABELS.md) — **the crux.** How capacity measurements become a revenue
+  nowcast without waiting years for labelled data. Read this one first if you only read
+  one.
+
 ---
 
 ## 1. Thesis
@@ -75,6 +82,8 @@ GPU-scarcity cross-asset index is a Phase 4+ extension, not the initial target.
 - Sell-side "AWS tracker" notes (what proxies do analysts already use?)
 
 ---
+
+> Full detail in [TECHNIQUES.md](TECHNIQUES.md). Summary below.
 
 ## 2. Signal sources — tiered by cost
 
@@ -162,6 +171,14 @@ Latency has many additive components; we must separate them.
 ---
 
 ## 5. Factor construction & nowcast model
+
+> **This section is summarised. The full labelling strategy — the crux of the whole
+> project — is in [LABELS.md](LABELS.md).** Key idea: don't regress probe features on
+> quarterly revenue (~4 points/yr). Model "cloud tightness" as a monthly latent factor
+> in a mixed-frequency dynamic factor model; many dense indicators (probes, spot prices,
+> Taiwan server-ODM monthly revenue, network traffic, IP-footprint growth) load on it,
+> and quarterly revenue is just one infrequent indicator that only has to identify a
+> single loading coefficient.
 
 ### Weekly factors (per provider, some also per region)
 

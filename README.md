@@ -11,8 +11,14 @@ parking-lot counts. Not investment advice.
 
 ## Status
 
-Phase 0 — design. See **[docs/DESIGN.md](docs/DESIGN.md)** for the full plan,
-thesis, risks, and phased roadmap. Decisions log: [docs/DECISIONS.md](docs/DECISIONS.md).
+Phase 0 — design.
+
+- **[docs/DESIGN.md](docs/DESIGN.md)** — full plan, thesis, risks, phased roadmap.
+- **[docs/TECHNIQUES.md](docs/TECHNIQUES.md)** — the sensing layer: what we measure,
+  which API, what it costs, why it carries signal.
+- **[docs/LABELS.md](docs/LABELS.md)** — **the crux.** How capacity measurements become
+  a revenue nowcast without waiting years for labelled data.
+- [docs/DECISIONS.md](docs/DECISIONS.md) — decisions log + open questions.
 
 ## The core bet
 

@@ -23,3 +23,10 @@ Newest first. Each entry: date, decision, rationale, who.
 | 4 | Where in-region collectors run (Lambda/EventBridge vs existing GH Action vs small VM) | Phase 1 | John |
 | 5 | How public is the output (private forever vs published research / data product) | Phase 6 | John |
 | 6 | AWS-only until the model works, or weight Azure/GCP signals from the start | Phase 3 | John |
+| 7 | Which third-party spend panels (Ramp, Vantage, …) publish a usable cloud breakout, at what freq/cost | Phase 2–3 | John |
+| 8 | Satellite: free Sentinel-2 only, or budget Planet for key DC campuses | Phase 3 | John |
+| 9 | Backfill effort (Wayback / transcript reconstruction) — Phase 3 task or later | Phase 3–4 | John |
+| 10 | Model per-region revenue via any disclosure, or keep region as a pooled fixed effect | Phase 3 | John |
+
+See [LABELS.md §10](LABELS.md#10-open-data-sourcing-questions) and
+[TECHNIQUES.md](TECHNIQUES.md) for context on 7–10.
