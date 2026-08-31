@@ -1,6 +1,118 @@
 # Feasibility spike — findings
 
-**Date:** 2026-08-30 · **Verdict:** 🟡→🔴 *lean negative on the current framing.*
+**Date:** 2026-08-30
+**Verdict after both rounds:** 🟡 **conditional go** — the lead-time mechanism is real
+(one episode), the effect is modest, and confidence now requires *forward* evidence.
+
+- Round 1 (coarse proxy): `analyze.py` — 🔴 the narrative-level signal is priced / subsumed.
+- Round 2 (self-measured spot premium): `analyze_sharpened.py` + `build_spot_index.py`
+  — 🟡 the quantitative signal **leads the narrative by ~1 quarter** but rests on n=1 episode.
+
+![spot premium](spot_premium.png)
+
+---
+
+## ROUND 2 — the self-measured signal (EC2 spot-price premium)
+
+Built a weekly cloud-tightness index from the **Zenodo EC2 spot-price archive**
+(2018–2023, 26.6M pool-day observations, 17 regions, CC0). Tightness proxy =
+`spot / on-demand` premium, on-demand approximated by the 99.5th percentile of each
+pool's own spot price (AWS caps spot at on-demand post-2017). This is a signal we
+*measured ourselves*, not one lifted from earnings commentary.
+
+### T1 — Does the spot premium LEAD the capacity narrative?  ✅ YES
+
+| date | all-family premium | event |
+|---|---|---|
+| Jan–mid-Feb 2023 | flat ~0.345 | — |
+| **20 Mar 2023** | **0.395** (>10% over 2022 baseline) | signal fires |
+| 10 Apr 2023 | 0.451 | — |
+| 25 Apr 2023 | plateau ~0.46 | MSFT FY23-Q3 call (first AI/capacity colour) |
+| **25 Jul 2023** | still ~0.46 | MSFT call — "**Azure AI capacity constrained**" enters the narrative |
+| Oct–Nov 2023 | falls back to ~0.36 | constraint being digested |
+
+The signal stepped up **~1 quarter before** the constraint narrative crystallised, and
+**5 weeks before** the first MSFT earnings mention. Regional concentration is sensible:
+the jump was in **us-west-2 (+0.26), ap-southeast-1 (+0.23), us-east-1 (+0.22),
+eu-west-1 (+0.21)** — the primary regions — and near-zero in ca-central-1,
+ap-northeast-3, eu-north-1. That's a real demand shock, not noise. The **breadth**
+measure (share of pools priced >60% of on-demand) is even cleaner: ~0.05 → ~0.22, the
+single largest move in the six-year series.
+
+### T2 — Does premium predict revenue-growth acceleration?  🟡 WEAK
+
+1-quarter-lead, pooled across AWS/Azure/GCP:
+
+| feature → next-quarter growth acceleration | r | t | n |
+|---|---|---|---|
+| premium (quarter start) | 0.30 | 2.2 | 50 |
+| premium YoY change | 0.32 | 2.4 | 50 |
+| **p90 premium YoY change** | **0.38** | **2.8** | 50 |
+
+Stronger than the coarse proxy (which was ~0.19). In the momentum-controlled
+regression the premium coefficient is +27.5 (t 1.9). **Adding the AI-era dummy**
+attenuates it to +16.0 (t 0.8) — roughly halved, but **still positive** (the coarse
+proxy flipped to −0.30 here). With only one major regime episode in the sample, the
+premium spike and the "AI era" dummy are near-collinear and can't be cleanly separated.
+
+### T3 — Does premium predict the earnings-day reaction?  ❌ NO
+
+`corr(premium, market-adjusted 1-day reaction) ≈ 0.01–0.04` (n=24). Same as Round 1.
+By the print, the capacity state is priced. **The tradeable edge is not "buy the stock
+into the print because capacity is tight."**
+
+### T4 — Premium change vs 20-day pre-earnings drift  — inconclusive (n=24, noisy).
+
+---
+
+## What Round 2 changes
+
+**Confirmed:** the side-channel *mechanism* works — a quantitative capacity probe would
+have flagged the 2023 inflection a quarter early, with region granularity, before
+sell-side and before the earnings narrative.
+
+**Still true:** no relationship with the print reaction. The value is a **~1-quarter
+lead on the consensus-revision cycle**, not surprise prediction.
+
+**The binding limitation — n = 1.** The observable history contains exactly **one** big
+cloud-capacity regime change (2023 AI inflection; COVID 2020 barely registered). A
+signal that has fired once cannot be trusted statistically, however clean that once
+looks. The archive also **stops at end-2023**, missing the 2024–25 episodes when AWS
+and GCP joined the constrained club.
+
+**On-demand-proxy caveat:** the elevated 2018–early-2019 premium is partly a proxy
+artifact (on-demand prices were higher then; a sample-wide proxy inflates old ratios).
+Does not affect the stable-priced 2021–2023 window where the signal fires.
+
+---
+
+## Recommended decision (updated)
+
+The elegant "latency → quarterly financials" framing is **not** what survives. What
+survives is: **a quantitative, GPU/region-granular, intra-quarter early-warning on
+cloud-demand inflections, with ~1 quarter of lead over consensus.** Modest, but
+differentiated and cheap to run.
+
+This is now a **forward bet**, not a backtest question:
+
+1. Stand up the **Tier-0 collector** (spot price, placement score, capacity errors) —
+   ~$0/mo, starts the clock.
+2. **Extend the historical test** where possible: find 2024–25 spot data (CloudPrice,
+   fresh API pulls, other archives). If the signal *also* led the 2024 AWS and 2024
+   GCP constraint episodes → 3 episodes, materially stronger evidence.
+3. **Pre-register** a prediction each earnings cycle (direction + timing of the
+   cloud-demand inflection, and whether it leads consensus revisions). Adjudicate over
+   4–8 quarters.
+4. Kill criterion: if the live signal does not lead consensus revisions on the next
+   ~4 inflections, stop.
+
+Downside is bounded (~$0–60/mo + engineering time). Upside is a real intra-quarter
+cloud-demand signal. Reasonable bet, eyes open about n=1.
+
+---
+
+## ROUND 1 — the coarse proxy (kept for the record)
+
 Run: `.venv/bin/python research/feasibility/analyze.py`
 
 ## Question
