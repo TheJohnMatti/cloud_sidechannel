@@ -73,6 +73,47 @@ def corr_t(a: pd.Series, b: pd.Series) -> tuple[float, float, int]:
 
 
 # --------------------------------------------------------------------------- #
+# Known cloud-capacity inflections. `expect` = which way tightness "should" move.
+EPISODES = [
+    ("2020 COVID cloud surge",      "2020-01-01", "2020-07-01", "up",
+     "MSFT throttled free trials Mar-Apr 2020; demand spike then normalised"),
+    ("2022-23 optimization trough",  "2022-07-01", "2023-02-01", "down",
+     "macro-driven demand softness; AWS growth 33%->16%; no capacity issue"),
+    ("2023 AI round 1 (Azure/OpenAI)","2023-02-01", "2023-08-01", "up",
+     "GPT-4; enterprise LLM demand; 'Azure AI capacity constrained' by Jul-2023 call"),
+    ("2024 H1 re-acceleration",       "2023-11-01", "2024-06-01", "up",
+     "digestion ends; AWS re-accelerates 13%->19%"),
+    ("2024H2-25 broad constraint",    "2024-06-01", "2025-06-01", "up",
+     "AWS + GCP join; MSFT 'short power and space' (Q4-24); all three constrained"),
+]
+
+
+def episode_table(wk: pd.DataFrame) -> None:
+    print("\n" + "=" * 78)
+    print("EPISODES  did the self-measured premium move at each known inflection?")
+    print("=" * 78)
+    a = wk[wk.scope == "all"].sort_values("week").set_index("week")["mean_premium"]
+    g = wk[wk.scope == "gpu"].sort_values("week").set_index("week")["mean_premium"]
+    b = wk[wk.scope == "all"].sort_values("week").set_index("week")["breadth_gt60"]
+    print(f"\n  {'episode':<32}{'window':<20}{'exp':<5}{'Δall':>7}{'Δgpu':>7}{'Δbreadth':>9}")
+    for name, lo, hi, expect, _ in EPISODES:
+        lo, hi = pd.Timestamp(lo), pd.Timestamp(hi)
+        pre = slice(lo - pd.Timedelta(weeks=6), lo + pd.Timedelta(weeks=2))
+        post = slice(hi - pd.Timedelta(weeks=8), hi)
+        if a.loc[pre].empty or a.loc[post].empty:
+            print(f"  {name:<32}{lo.date()}..{hi.date()}  [no data]")
+            continue
+        da = a.loc[post].mean() - a.loc[pre].mean()
+        dg = g.loc[post].mean() - g.loc[pre].mean()
+        db = b.loc[post].mean() - b.loc[pre].mean()
+        hit = "OK" if (da > 0.02) == (expect == "up") else "MISS" if abs(da) > 0.02 else "flat"
+        print(f"  {name:<32}{lo.date()}..{hi.date()}  {expect:<5}{da:>+7.3f}{dg:>+7.3f}{db:>+9.3f}  {hit}")
+    print("\n  Δ = (mean over last 8wk of window) − (mean over 6wk before window start).")
+    print("  'exp' up = tightness should rise. Signal is credible only if it hits the")
+    print("  UP episodes AND stays flat on the 'down' (optimization) one.")
+
+
+# --------------------------------------------------------------------------- #
 def t1_lead_narrative(wk: pd.DataFrame, cc: pd.DataFrame) -> None:
     print("\n" + "=" * 78)
     print("T1  Does the GPU spot premium LEAD the capacity-constraint narrative?")
@@ -82,7 +123,7 @@ def t1_lead_narrative(wk: pd.DataFrame, cc: pd.DataFrame) -> None:
     gpu_m = gpu.resample("MS").mean()
     all_m = allp.resample("MS").mean()
     print("\n  GPU-family & all-family mean spot premium, monthly (higher = tighter).")
-    print("  Only 2022-2023 shown (the interesting window):")
+    print("  2022 onward:")
     print("  month       gpu    all   | vs narrative")
     narr = {r["cq"]: r["azure_cc"] for _, r in cc.iterrows()}
     for mo in gpu_m.index:
@@ -256,6 +297,7 @@ if __name__ == "__main__":
     qg = quarterize(wk, "gpu").add_suffix("_gpu").rename(columns={"cq_gpu": "cq"})
     q = q.merge(qg, on="cq", how="left")
     print(q[["cq", "prem_qstart", "prem_qmean", "prem_qmean_yoy", "prem_qstart_gpu", "prem_qmean_gpu"]].to_string(index=False))
+    episode_table(wk)
     t1_lead_narrative(wk, cc)
     t2_growth_accel(q, rev, cc)
     t3_earnings_reaction(q, cc)
