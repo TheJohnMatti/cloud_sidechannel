@@ -1,14 +1,109 @@
 # Feasibility spike — findings
 
 **Date:** 2026-08-30
-**Verdict after both rounds:** 🟡 **conditional go** — the lead-time mechanism is real
-(one episode), the effect is modest, and confidence now requires *forward* evidence.
+**Verdict after three rounds:** 🔴 **lean no.** The self-measured signal fired cleanly on
+**one** capacity episode (2023) and is noisy, absent, or backwards on the other four.
+The one robust predictive relationship washes out against a trivial "AI-era" control.
 
-- Round 1 (coarse proxy): `analyze.py` — 🔴 the narrative-level signal is priced / subsumed.
-- Round 2 (self-measured spot premium): `analyze_sharpened.py` + `build_spot_index.py`
-  — 🟡 the quantitative signal **leads the narrative by ~1 quarter** but rests on n=1 episode.
+- Round 1 (coarse proxy): `analyze.py` — 🔴 narrative-level signal is priced / subsumed.
+- Round 2 (spot premium, 2018-2023, **n=1 episode**): 🟡 signal **led the 2023 narrative by
+  ~1 quarter** — promising but one data point.
+- Round 3 (spot premium, **2018-2025, n=5 episodes** via the Pauley archive): 🔴 the extra
+  episodes don't corroborate. See below.
 
 ![spot premium](spot_premium.png)
+
+---
+
+## ROUND 3 — multi-episode test (the decisive one)
+
+Extended the index to 2025 by adding the **Pauley archive** (`10.5281/zenodo.14198917`,
+2024-2025, `.tsv.zst`). The ISI→Pauley seam is clean (n_pools 745→749→765 across the
+2024Q1 boundary — two independently-collected datasets agree). On-demand proxy switched
+to median-of-monthly-maxes on 2022+ data (removes the pre-2020 artifact; absolute
+premium levels shift up ~0.13, shapes unchanged).
+
+### Did the premium move at each known capacity inflection?
+
+| episode | expected | Δ all-premium | Δ GPU | Δ breadth | result |
+|---|---|---|---|---|---|
+| 2020 COVID cloud surge | ↑ | +0.016 | +0.002 | +0.024 | **~flat — missed** |
+| 2022-23 "optimization" trough | ↓ / flat | +0.005 | −0.010 | +0.005 | **flat — correct** |
+| **2023 AI round 1** | ↑ | **+0.126** | **+0.090** | **+0.230** | **strong hit** |
+| 2024 H1 re-acceleration | ↑ | −0.033 | −0.065 | −0.027 | **backwards — miss** |
+| 2024 H2–25 broad constraint | ↑ | +0.012 | +0.044 | −0.001 | **weak / slow grind** |
+
+One clean hit, one correct null, one weak grind, two misses (one of them backwards).
+The 2023 episode is the only one where the signal did what the thesis needs.
+
+The **2024 H1 miss is informative**: the premium *fell* while AWS growth re-accelerated
+13%→19%. Tightness and revenue growth genuinely *decoupled* — because that
+re-acceleration was demand-side (easy comps, optimization headwind fading) plus AWS
+adding capacity fast, not a new capacity scramble. So the signal isn't a revenue-growth
+proxy — but it also isn't reliably predictive of revenue growth. You'd need to know
+*which regime you're in* to use it, and you only know that in hindsight.
+
+### T1 — lead the narrative
+
+- **2023:** still a clean ~1-quarter lead (premium steps up 20 Mar 2023; "Azure AI
+  capacity constrained" enters the narrative on the Jul 2023 call).
+- **2024–25:** the premium grinds up through 2024 H2 into 2025 (GPU premium hits 0.54 in
+  Aug-Sep 2025, highest since 2023), but roughly **coincident** with the AWS (Q1-25) and
+  GCP (late-24) constraint admissions — not a clear lead. And the regional concentration
+  is in *secondary* regions (ap-northeast-3, eu-central-2, ca-central-1), not the primary
+  us-east-1/us-west-2 as in 2023 — a weaker "demand shock in the core" pattern.
+
+### T2 — premium → revenue-growth acceleration
+
+| feature → next-quarter growth accel | r | t | n |
+|---|---|---|---|
+| **premium level (quarter start)** | **0.34** | **2.9** | 68 |
+| breadth (share of pools > 60% OD) | 0.31 | 2.6 | 68 |
+| premium YoY change | 0.18 | 1.5 | 68 |
+
+The **level** of tightness entering a quarter is a real, now-significant predictor of the
+next quarter's growth acceleration — this *strengthened* with more data. **But:** add an
+AI-era dummy (2023Q2+) and R² jumps 0.02→0.14 while the premium coefficient falls to
++6.8 (t 0.8). The dummy explains almost everything; premium adds little beyond
+"the AI upcycle is on."
+
+### T3 / T4 — the market
+
+- **T3** (earnings-day reaction): corr +0.14 (t 0.9, n=42). Was ~0 in round 2, now
+  faintly positive but not significant. Inconclusive.
+- **T4** (20-day pre-earnings drift vs premium change): corr **−0.34, t −2.3** — now
+  significant and **negative**. Quarters where spot tightened saw the stock *underperform*
+  into the print. Plausible read: in 2024-25 the market treated capacity tightness as a
+  near-term capex/margin **negative** (ROI worries) before any revenue benefit. The naive
+  "tight → long the stock" trade would have been *backwards* in the short run.
+
+---
+
+## What round 3 changes
+
+**The n=1 risk we flagged is now partly confirmed.** With four more episodes to check
+against, the 2023 success looks like **survivorship on a single dramatic regime change**,
+not a repeatable detector. The signal measures *something* real about capacity (it
+decoupled from revenue in 2024 H1 in a sensible way) — but "something real" is not
+"tradeable alpha," and T4 suggests the obvious trade is even the wrong sign near-term.
+
+**What (barely) survives:** the premium *level* entering a quarter has a ~0.34
+correlation with next-quarter growth acceleration. As *one input among many* in a
+mixed-frequency cloud nowcast it might carry marginal weight. It is not the
+differentiated, market-beating signal the project was premised on.
+
+**Recommendation:** shelve the trading thesis. The honest conclusion is that the
+feasibility work answered the question and the answer is mostly **no**. Options that
+remain defensible:
+- Keep the sensing/pipeline work as a **capacity-intelligence** artifact (real-time
+  "where is GPU capacity") — a data product, not a trade.
+- Park it. The repo is in a clean, fully-reproducible state (`build_spot_index.py` →
+  `analyze_sharpened.py`); revisit only if a sharper mechanism appears.
+
+Priors now: the elegant "cloud latency → quarterly financials" thesis has been given a
+fair, three-round test on real data and does not hold up.
+
+---
 
 ---
 
@@ -86,7 +181,10 @@ Does not affect the stable-priced 2021–2023 window where the signal fires.
 
 ---
 
-## Recommended decision (updated)
+## Recommended decision (round 2 — SUPERSEDED by round 3 above)
+
+> ⚠️ The recommendation below was written after round 2 (n=1). Round 3 (n=5) did not
+> corroborate the signal — see the top of this doc. Kept for the record.
 
 The elegant "latency → quarterly financials" framing is **not** what survives. What
 survives is: **a quantitative, GPU/region-granular, intra-quarter early-warning on
